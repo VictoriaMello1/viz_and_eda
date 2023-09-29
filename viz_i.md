@@ -289,4 +289,57 @@ weather_df %>%
 ![](viz_i_files/figure-gfm/unnamed-chunk-16-1.png)<!-- --> –\> violin
 plots can be more informative than a boxplot at times
 
-Ridge plots
+Ridge plots – good for when you have a categorical predictor with lots
+of variables
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = name)) +
+  geom_density_ridges()
+```
+
+    ## Picking joint bandwidth of 1.41
+
+    ## Warning: Removed 17 rows containing non-finite values
+    ## (`stat_density_ridges()`).
+
+![](viz_i_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+## Save and embed
+
+Save a scatterplot
+
+``` r
+weather_plot =
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5)
+
+ggsave("weather_plot.png", weather_plot)
+```
+
+    ## Saving 7 x 5 in image
+
+    ## Warning: Removed 17 rows containing missing values (`geom_point()`).
+
+What about embedding?
+
+``` r
+weather_plot
+```
+
+    ## Warning: Removed 17 rows containing missing values (`geom_point()`).
+
+![](viz_i_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+Embed at a different size
+
+``` r
+weather_plot
+```
+
+    ## Warning: Removed 17 rows containing missing values (`geom_point()`).
+
+![](viz_i_files/figure-gfm/unnamed-chunk-20-1.png)<!-- --> – Need to be
+aware of what size you are embedding things at to ensure that things
+look okay in the output

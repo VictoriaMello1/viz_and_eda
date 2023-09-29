@@ -161,9 +161,35 @@ weather_df %>%
 ```
 --> violin plots can be more informative than a boxplot at times
 
-Ridge plots
+Ridge plots -- good for when you have a categorical predictor with lots of variables
 
 ```{r}
-
+weather_df %>% 
+  ggplot(aes(x = tmin, y = name)) +
+  geom_density_ridges()
 ```
 
+## Save and embed 
+
+Save a scatterplot
+
+```{r}
+weather_plot =
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = .5)
+
+ggsave("weather_plot.png", weather_plot)
+```
+
+What about embedding?
+
+```{r}
+weather_plot
+```
+
+Embed at a different size
+```{r, fig.width=12, fig.height=6}
+weather_plot
+```
+-- Need to be aware of what size you are embedding things at to ensure that things look okay in the output 
