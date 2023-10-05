@@ -192,3 +192,71 @@ options(
 scale_color_discrete = scale_color_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+## Data arguments in ‘geom’
+
+``` r
+central_park = 
+  weather_df %>% 
+  filter(name == "CentralPark_NY")
+
+waikiki = 
+  weather_df %>% 
+  filter(name == "Waikiki_HA")
+
+ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_line(data = waikiki)
+```
+
+![](viz_ii_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+## Patchwork
+
+Remember faceting?
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, fill = name)) +
+  geom_density(alpha =.5) +
+  facet_grid(. ~ name)
+```
+
+    ## Warning: Removed 30 rows containing non-finite values (`stat_density()`).
+
+![](viz_ii_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+What happens when you want multipanel plots but cant facet?
+
+``` r
+tmax_tmin_p =
+  weather_df %>% 
+    ggplot(aes(x = tmin, y = tmax, color = name)) +
+    geom_density(alpha = .5) +
+    theme(legend.position = "none")
+  
+prcp_dens_p =
+  weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x=prcp, fill=name)) +
+  geom_density(alpha=.5)
+
+tmax_date_p = 
+  weather_df %>% 
+      ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  theme(legend.position = "none")
+
+(prcp_dens_p + tmax_date_p)
+```
+
+    ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+
+    ## Warning: Removed 30 rows containing non-finite values (`stat_smooth()`).
+
+    ## Warning: Removed 30 rows containing missing values (`geom_point()`).
+
+![](viz_ii_files/figure-gfm/unnamed-chunk-11-1.png)<!-- --> The last
+line is how you join the datasets so that they display together - the
+first tmax df i made will not view in plots for some reason
