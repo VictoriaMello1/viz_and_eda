@@ -232,7 +232,7 @@ What happens when you want multipanel plots but cant facet?
 tmax_tmin_p =
   weather_df %>% 
     ggplot(aes(x = tmin, y = tmax, color = name)) +
-    geom_density(alpha = .5) +
+    geom_point(alpha = .5) +
     theme(legend.position = "none")
   
 prcp_dens_p =
@@ -248,15 +248,50 @@ tmax_date_p =
   geom_smooth(se = FALSE) +
   theme(legend.position = "none")
 
-(prcp_dens_p + tmax_date_p)
+tmax_tmin_p + (prcp_dens_p + tmax_date_p)
 ```
+
+    ## Warning: Removed 30 rows containing missing values (`geom_point()`).
 
     ## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
 
     ## Warning: Removed 30 rows containing non-finite values (`stat_smooth()`).
-
-    ## Warning: Removed 30 rows containing missing values (`geom_point()`).
+    ## Removed 30 rows containing missing values (`geom_point()`).
 
 ![](viz_ii_files/figure-gfm/unnamed-chunk-11-1.png)<!-- --> The last
-line is how you join the datasets so that they display together - the
-first tmax df i made will not view in plots for some reason
+line is how you join the plots so that they display together in the
+plots viewer and can be exported together(i think?)
+
+## Interplay between data manipulation and plotting
+
+``` r
+weather_df %>% 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Molokai_HI"))
+  ) %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin(alpha = .5)
+```
+
+    ## Warning: Removed 30 rows containing non-finite values (`stat_ydensity()`).
+
+![](viz_ii_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+What if I wanted densities for both tmin and tmax?
+
+``` r
+weather_df %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) + 
+  geom_density(alpha = .5) +
+  facet_grid(. ~ name)
+```
+
+    ## Warning: Removed 60 rows containing non-finite values (`stat_density()`).
+
+![](viz_ii_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
